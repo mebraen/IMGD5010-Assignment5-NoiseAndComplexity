@@ -1,69 +1,101 @@
-let agents = []
+let snowflakes = []
 let count  = 100 
+let prevMouseX = -1
+let prevMouseY = -1
+let windSpeed = 0
 
 function setup() {
   createCanvas(400, 400)
   
+  //initialize snowflakes
   for( let i = 0; i < count; i++ ) {
-    let agent = new Agent(x=random() * width-15, y=random() * height)
-    agents.push(agent)
+    let snowflake = new Snowflake(x=random() * width-15, y=random() * height)
+    snowflakes.push(snowflake)
   }
   
-  strokeWeight( 5 )
-  stroke( 'white' )
-  
-  //frameRate(1)
 }
 
 function draw() {
   background( 0 )
     
-  agents.forEach( a => {
-    a.drawAgent()
-    let direction = round(random())
+  snowflakes.forEach( s => {
     
-    //let noiseLevel = 100;
-    let noiseScale = 0.005;
-    let nt = a.noiseScale * frameCount;
+    //noiseScale is random for each snowflake
+    let nt = s.noiseScale * frameCount;
+    
+    //x - controlled by noise and wind-speed
+    // wind-speed is controllable by mouse
+    s.x += windSpeed + noise(nt)
+    if(s.x > width) {
+      s.x = -25
+    }
+    if(s.x < -25) {
+      s.x = width
+    }
     
     //y - speed is constant (but random) for each snowflake
-    a.y += a.speed
-    if(a.y > height+25) {
-      a.y = 0
+    // speed is controllable by mouse
+    s.y += s.speed
+    if(s.y > height+25) {
+      s.y = 0
     }
     
-    //x - controlled by noise
-    a.x += noise(nt)
-    if(a.x > width) {
-      a.x = -25
-    }
-    if(a.x < -25) {
-      a.x = width
-    }
+    s.drawAgent()
   })
 }
 
-class Agent {
+class Snowflake {
   
-  constructor(x, y, speed, noiseLevel, noiseScale) {
+  constructor(x, y, speed, noiseScale) {
     this.x = x
     this.y = y
     this.speed = random(0.30, 0.80)
-    this.noiseLevel = random(0,600)
-    this.noiseScale = random(0.01)
-  }
-  
-  calculateNoise(frame) {
-    let noiseLevel = width;
-    let noiseScale = 0.005;
-    let nt = noiseScale * frame;
-    
-    return noiseLevel * noise(this.x,this.y,nt)
+    this.noiseScale = random(0.05)
   }
   
   drawAgent() {
-    //point(this.x, this.y)
     textSize(20)
     text('❄️', this.x, this.y)
   }
 }
+
+function mousePressed() {
+  prevMouseY = mouseY
+  prevMouseX = mouseX
+}
+
+function mouseDragged() {
+  
+  //dragging mouse up/down increases/decreases speed snowflakes fall
+  if(prevMouseY != -1) {
+    if(mouseY < prevMouseY) {
+      snowflakes.forEach(s => {
+        if(s.speed > 0.05) {
+          s.speed-=0.01
+        }
+      })
+    }
+    else {
+      snowflakes.forEach(s => {
+        s.speed+=0.01
+      })
+    }
+  }
+  
+  //dragging mouse right/left increases/decreases wind speed and direction
+  if(prevMouseX != -1) {
+    if(mouseX < prevMouseX) {
+      windSpeed-=0.05
+    }
+    else {
+      windSpeed+=0.05
+    }
+  }
+  
+}
+
+function mouseReleased() {
+  prevMouseY = -1
+  prevMouseX = -1
+}
+
