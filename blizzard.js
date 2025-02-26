@@ -85,10 +85,10 @@ function mouseDragged() {
   //dragging mouse right/left increases/decreases wind speed and direction
   if(prevMouseX != -1) {
     if(mouseX < prevMouseX) {
-      windSpeed-=0.05
+      windSpeed-=0.03
     }
     else {
-      windSpeed+=0.05
+      windSpeed+=0.03
     }
   }
   
