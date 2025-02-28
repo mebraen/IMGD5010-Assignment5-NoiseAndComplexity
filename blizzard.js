@@ -1,5 +1,5 @@
 let snowflakes = []
-let count  = 100 
+let count  = 100
 let prevMouseX = -1
 let prevMouseY = -1
 let windSpeed = 0
@@ -40,7 +40,7 @@ function draw() {
       s.y = 0
     }
     
-    s.drawAgent()
+    s.drawSnowflake()
   })
 }
 
@@ -54,7 +54,7 @@ class Snowflake {
     this.size = random(12,25)
   }
   
-  drawAgent() {
+  drawSnowflake() {
     textSize(this.size)
     text('❄️', this.x, this.y)
   }
@@ -92,6 +92,9 @@ function mouseDragged() {
       windSpeed+=0.03
     }
   }
+  
+  prevMouseX = mouseX
+  prevMouseY = mouseY
   
 }
 
