@@ -46,15 +46,16 @@ function draw() {
 
 class Snowflake {
   
-  constructor(x, y, speed, noiseScale) {
+  constructor(x, y, speed, noiseScale, size) {
     this.x = x
     this.y = y
     this.speed = random(0.30, 0.80)
     this.noiseScale = random(0.05)
+    this.size = random(12,25)
   }
   
   drawAgent() {
-    textSize(20)
+    textSize(this.size)
     text('❄️', this.x, this.y)
   }
 }
@@ -70,14 +71,14 @@ function mouseDragged() {
   if(prevMouseY != -1) {
     if(mouseY < prevMouseY) {
       snowflakes.forEach(s => {
-        if(s.speed > 0.05) {
-          s.speed-=0.01
+        if(s.speed > 0.2) {
+          s.speed-=0.02
         }
       })
     }
     else {
       snowflakes.forEach(s => {
-        s.speed+=0.01
+        s.speed+=0.02
       })
     }
   }
